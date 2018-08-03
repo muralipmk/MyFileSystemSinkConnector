@@ -1,0 +1,22 @@
+[
+{
+    "namespace": "org.my.fun",
+    "type": "record",
+    "name": "MetaData",
+    "doc": "Avro Schema for MetaData",
+    "fields": [
+       {"name": "size", "type": "long", "doc": "file size"}
+       ]
+},
+{
+    "namespace": "org.my.fun",
+    "type": "record",
+	"name": "FileData",
+	"doc": "Avro Schema for FileData",
+	"fields": [
+	 	{"name": "absolutePath", "type": "string", "doc": "Absolute path of file" },
+		{"name": "fileName", "type": "string", "doc": "File name" },
+		{"name": "metaData", "type": "MetaData"}
+	   ]
+}
+]

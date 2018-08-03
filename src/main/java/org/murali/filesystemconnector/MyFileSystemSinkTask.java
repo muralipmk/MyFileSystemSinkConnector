@@ -6,14 +6,14 @@ import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
+import org.my.fun.FileData;
+import org.my.fun.MetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.Map;
-
-import static org.murali.filesystemconnector.MyFileSystemSinkConnectorConfig.TARGET_DIRECTORY;
 
 public class MyFileSystemSinkTask extends SinkTask {
     private static Logger log = LoggerFactory.getLogger(MyFileSystemSinkTask.class);
@@ -47,15 +47,21 @@ public class MyFileSystemSinkTask extends SinkTask {
         }
     }
 
+
     @Override
     public void put(Collection<SinkRecord> collection) {
 
         for(SinkRecord sinkRecord: collection){
             try {
-                Struct fileData= (Struct) sinkRecord.value();
-                File file= new File(folder.getAbsolutePath()  + File.separator + fileData.get("fileName"));
+               // Struct fileData= (Struct) sinkRecord.value();
+                FileData fileData= MyAvroStuctConverter.getFileData((Struct)sinkRecord.value());
+               /* Struct data= (Struct) sinkRecord.value();
+                Struct metaData= (Struct) data.getStruct("metaData");
+                */
+                File file= new File(folder.getAbsolutePath()  + File.separator + fileData.getFileName());
                 file.createNewFile();
-                log.info("File with " + fileData.get("fileName") + " has created successfully...");
+                log.info("File Data Received: " + fileData);
+                log.info("File with " + fileData.getFileName() + " has created successfully...");
             }catch (Exception e){
                 e.printStackTrace();
             }
