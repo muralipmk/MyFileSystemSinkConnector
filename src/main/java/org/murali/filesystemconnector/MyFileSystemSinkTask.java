@@ -7,7 +7,6 @@ import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
 import org.my.fun.FileData;
-import org.my.fun.MetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +30,6 @@ public class MyFileSystemSinkTask extends SinkTask {
         String folderName = fileSystemSinkConfg.getTargetDirectory();
 
         if (folderName == null) {
-            System.out.println("Hi dude: " + fileSystemSinkConfg);
             throw new ConnectException("Missing target folder!");
         }
         log.info("Folder name {}", folderName);
@@ -53,11 +51,9 @@ public class MyFileSystemSinkTask extends SinkTask {
 
         for(SinkRecord sinkRecord: collection){
             try {
-               // Struct fileData= (Struct) sinkRecord.value();
+
                 FileData fileData= MyAvroStuctConverter.getFileData((Struct)sinkRecord.value());
-               /* Struct data= (Struct) sinkRecord.value();
-                Struct metaData= (Struct) data.getStruct("metaData");
-                */
+
                 File file= new File(folder.getAbsolutePath()  + File.separator + fileData.getFileName());
                 file.createNewFile();
                 log.info("File Data Received: " + fileData);
